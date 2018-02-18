@@ -1,0 +1,21 @@
+{
+  "name": "project-boltius-api",
+  "version": "1.0.0",
+  "description": "API for Project Boltius",
+  "main": "index.js",
+  "repository": "git@github.com:bdatdo0601/project-boltius-api.git",
+  "author": "Dat Do <dod2@wit.edu>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "eslint-config-hapi": "^11.1.0",
+    "eslint-plugin-hapi": "^4.1.0",
+    "hapi": "^17.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.18.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.0",
+    "prettier": "^1.10.2"
+  }
+}
