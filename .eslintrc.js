@@ -10,10 +10,9 @@ module.exports = {
         "hapi",
         "plugin:prettier/recommended",
     ],
-    "parserOptions": {
-        "sourceType": "module"
-    },
+    "parser": "babel-eslint",
     "rules": {
+        "no-param-reassign": "off",
         "object-curly-newline": "off",
         "max-len": "off",
         "comma-dangle": "off",
@@ -39,5 +38,6 @@ module.exports = {
             "trailingComma": "es5"
           }
         ],
+        "hapi/hapi-scope-start": "off"
     }
 };
