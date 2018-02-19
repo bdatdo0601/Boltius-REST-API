@@ -5,6 +5,7 @@ class Preware {
         return {
             assign: "ensureAdminGroup",
             method: function(request, h) {
+                let newGroups;
                 if (Object.prototype.toString.call(groups) !== "[object Array]") {
                     newGroups = [groups];
                 } else {

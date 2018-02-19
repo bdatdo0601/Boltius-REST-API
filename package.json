@@ -11,8 +11,7 @@
     "start": "nodemon -e js,md server.js",
     "inspect": "nodemon --inspect -e js,md server.js",
     "first-time-setup": "node first-time-setup.js",
-    "test": "lab -c -L",
-    "test-server": "lab -c -L -v $TEST_TARGET"
+    "test": "lab -c -L"
   },
   "engines": {
     "node": "9.x.x"

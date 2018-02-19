@@ -27,7 +27,7 @@ class Mailer {
     static async sendEmail(options, template, context) {
         const content = await this.renderTemplate(template, context);
 
-        newOptions = Hoek.applyToDefaults(options, {
+        const newOptions = Hoek.applyToDefaults(options, {
             from: Config.get("/system/fromAddress"),
             markdown: content,
         });
