@@ -22,6 +22,9 @@ const register = function(server, serverOptions) {
                     page: Joi.number().default(1),
                 },
             },
+            description: "Get Accounts",
+            notes: "Returns all accounts existed",
+            tags: ["api", "accounts"],
         },
         handler: async function(request, h) {
             const query = {};
@@ -47,6 +50,18 @@ const register = function(server, serverOptions) {
                     name: Joi.string().required(),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: {
+                        "400": {
+                            description: "Bad Request",
+                        },
+                    },
+                },
+            },
+            description: "Create New Accounts",
+            notes: "Add a new account to database ",
+            tags: ["api", "accounts"],
         },
         handler: async function(request, h) {
             return await Account.create(request.payload.name);

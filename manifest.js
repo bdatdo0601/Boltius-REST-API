@@ -1,6 +1,7 @@
 const Confidence = require("confidence");
 const Config = require("./config");
 const Path = require("path");
+const { version } = require("./package.json");
 
 const criteria = {
     env: process.env.NODE_ENV,
@@ -54,6 +55,27 @@ const manifest = {
                 },
             },
             {
+                plugin: "inert",
+            },
+            {
+                plugin: "vision",
+            },
+            {
+                plugin: "hapi-swagger",
+                options: {
+                    info: {
+                        title: "Project Boltius API",
+                        version,
+                        contact: {
+                            name: "Dat Do",
+                            email: "dod2@wit.edu",
+                        },
+                    },
+                    grouping: "tags",
+                    sortTags: "name",
+                },
+            },
+            {
                 plugin: "hapi-auth-basic",
             },
             {
@@ -74,6 +96,9 @@ const manifest = {
                     ],
                     autoIndex: Config.get("/hapiMongoModels/autoIndex"),
                 },
+            },
+            {
+                plugin: "./server/api/graphql",
             },
             {
                 plugin: "./server/auth",

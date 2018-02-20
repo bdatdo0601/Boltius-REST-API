@@ -12,6 +12,7 @@ module.exports = {
     ],
     "parser": "babel-eslint",
     "rules": {
+        "hapi/no-arrowception": "off",
         "no-param-reassign": "off",
         "object-curly-newline": "off",
         "max-len": "off",
