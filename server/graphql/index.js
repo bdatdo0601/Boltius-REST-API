@@ -1,12 +1,11 @@
 const { Source, parse, validate, execute, getOperationAST, specifiedRules } = require("graphql");
 const RenderGraphiQL = require("./renderGraphiQL");
 const Boom = require("boom");
-const Schema = require("./schema/schema");
 
 /**
  * Define helper: execute query and create result
  */
-const createResult = async (operationName, query, isGet, showGraphiQL, variables) => {
+const createResult = async (operationName, query, isGet, showGraphiQL, variables, schema) => {
     // If there is no query, but GraphiQL will be displayed, do not produce
     // a result, otherwise return a 400: Bad Request.
     if (!query) {
@@ -28,7 +27,7 @@ const createResult = async (operationName, query, isGet, showGraphiQL, variables
     }
 
     // Validate AST, reporting any errors.
-    const validationErrors = validate(Schema, documentAST, specifiedRules);
+    const validationErrors = validate(schema, documentAST, specifiedRules);
     if (validationErrors.length > 0) {
         // Return 400: Bad Request if any validation errors exist.
         throw Boom.badRequest("Validation error", validationErrors);
@@ -53,7 +52,7 @@ const createResult = async (operationName, query, isGet, showGraphiQL, variables
 
     // Perform the execution, reporting any errors creating the context.
     try {
-        return await execute(Schema, documentAST, null, null, variables, operationName);
+        return await execute(schema, documentAST, null, null, variables, operationName);
     } catch (contextError) {
         // Return 400: Bad Request if any execution context errors exist.
         throw Boom.badRequest("Context error", [contextError]);

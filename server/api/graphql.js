@@ -1,7 +1,9 @@
 const { formatError } = require("graphql");
 const Accepts = require("accepts");
+const Boom = require("boom");
 const { Stream } = require("stream");
 const GraphQLModule = require("../graphql");
+const Schema = require("../graphql/schema/schema");
 
 /**
  * Define helper: parse payload
@@ -36,8 +38,7 @@ const parsePayload = async request => {
 const getGraphQLParams = (data = {}, isPayload) => {
     const query = !isPayload ? data.query.query : data.query;
     // Parse the variables if needed.
-
-    let variables = query ? query.variables : data.variables;
+    let variables = query && !isPayload ? data.query.variables : data.variables;
     if (variables && typeof variables === "string") {
         try {
             variables = JSON.parse(variables);
@@ -47,8 +48,7 @@ const getGraphQLParams = (data = {}, isPayload) => {
     }
 
     // Name of GraphQL operation to execute.
-    const operationName = query ? query.operationName : data.operationName;
-
+    const operationName = query && !isPayload ? data.query.operationName : data.operationName;
     // Return params
     return { query, variables, operationName };
 };
@@ -77,10 +77,10 @@ const register = (server, serverOptions) => {
             // Parse payload
             const payload = await parsePayload(request);
             // Can we show graphiQL?
-            const showGraphiQL = await canDisplayGraphiQL(request, payload);
+            const showGraphiQL = process.env.NODE_ENV === "development" && (await canDisplayGraphiQL(request, payload));
             // Get GraphQL params from the request and POST body data.
             const { query, variables, operationName } = getGraphQLParams(request, false);
-            const result = await GraphQLModule.getResult(operationName, query, true, showGraphiQL, variables);
+            const result = await GraphQLModule.getResult(operationName, query, true, showGraphiQL, variables, Schema);
             // Format any encountered errors.
             if (result && result.errors) {
                 result.errors = result.errors.map(formatError);
@@ -103,7 +103,7 @@ const register = (server, serverOptions) => {
         },
         handler: async (request, h) => {
             const { query, variables, operationName } = await getGraphQLParams(request.payload, true);
-            const result = await GraphQLModule.getResult(operationName, query, false, false, variables);
+            const result = await GraphQLModule.getResult(operationName, query, false, false, variables, Schema);
             // Format any encountered errors.
             if (result && result.errors) {
                 result.errors = result.errors.map(formatError);
