@@ -7,6 +7,8 @@ const Status = require("../models/status");
 const StatusEntry = require("../models/status-entry");
 const User = require("../models/user");
 
+const RESPONSES = require("../constants/Responses");
+
 const register = function(server, serverOptions) {
     server.route({
         method: "GET",
@@ -17,14 +19,25 @@ const register = function(server, serverOptions) {
             },
             validate: {
                 query: {
-                    sort: Joi.string().default("_id"),
-                    limit: Joi.number().default(20),
-                    page: Joi.number().default(1),
+                    sort: Joi.string()
+                        .default("_id")
+                        .description("determine which param of accounts to sort by"),
+                    limit: Joi.number()
+                        .default(20)
+                        .description("maximum amount of accounts that will be return"),
+                    page: Joi.number()
+                        .default(1)
+                        .description("allow pagination of account list"),
+                },
+            },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
                 },
             },
             description: "Get Accounts",
             notes: "Returns all accounts existed",
-            tags: ["api", "accounts"],
+            tags: ["api", "adminScope"],
         },
         handler: async function(request, h) {
             const query = {};
@@ -47,21 +60,19 @@ const register = function(server, serverOptions) {
             },
             validate: {
                 payload: {
-                    name: Joi.string().required(),
+                    name: Joi.string()
+                        .required()
+                        .description("Name of the new account"),
                 },
             },
             plugins: {
                 "hapi-swagger": {
-                    responses: {
-                        "400": {
-                            description: "Bad Request",
-                        },
-                    },
+                    responses: RESPONSES,
                 },
             },
             description: "Create New Accounts",
             notes: "Add a new account to database ",
-            tags: ["api", "accounts"],
+            tags: ["api", "adminScope"],
         },
         handler: async function(request, h) {
             return await Account.create(request.payload.name);
@@ -75,6 +86,14 @@ const register = function(server, serverOptions) {
             auth: {
                 scope: "admin",
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Get an Account",
+            notes: "Get an account from ID ",
+            tags: ["api", "adminScope"],
         },
         handler: async function(request, h) {
             const account = await Account.findById(request.params.id);
@@ -100,9 +119,19 @@ const register = function(server, serverOptions) {
                         first: Joi.string().required(),
                         middle: Joi.string().allow(""),
                         last: Joi.string().required(),
-                    }).required(),
+                    })
+                        .required()
+                        .description("new name of an account (divided by first, middle and last)"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Change name of an account",
+            notes: "Rename of an already exist account",
+            tags: ["api", "adminScope"],
         },
         handler: async function(request, h) {
             const id = request.params.id;
@@ -128,6 +157,14 @@ const register = function(server, serverOptions) {
             auth: {
                 scope: "admin",
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Delete an Account",
+            notes: "Delete an account from database",
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -152,9 +189,18 @@ const register = function(server, serverOptions) {
                 payload: {
                     username: Joi.string()
                         .lowercase()
-                        .required(),
+                        .required()
+                        .description("user's username to link with this account"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Link user and account",
+            notes: "Link user with an existing account. One to one relation",
+            tags: ["api", "adminScope"],
             pre: [
                 {
                     assign: "account",
@@ -210,6 +256,13 @@ const register = function(server, serverOptions) {
             auth: {
                 scope: "admin",
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Unlink user and account",
+            tags: ["api", "adminScope"],
             pre: [
                 {
                     assign: "account",
@@ -259,9 +312,19 @@ const register = function(server, serverOptions) {
             },
             validate: {
                 payload: {
-                    data: Joi.string().required(),
+                    data: Joi.string()
+                        .required()
+                        .description("note data"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Create a note",
+            notes: "Create a note for an account",
+            tags: ["api", "adminScope"],
         },
         handler: async function(request, h) {
             const id = request.params.id;
@@ -297,9 +360,19 @@ const register = function(server, serverOptions) {
             },
             validate: {
                 payload: {
-                    status: Joi.string().required(),
+                    status: Joi.string()
+                        .required()
+                        .description("new status"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Assign Statuses",
+            notes: "Assign a Status to an account",
+            tags: ["api", "adminScope"],
             pre: [
                 {
                     assign: "status",
@@ -351,6 +424,14 @@ const register = function(server, serverOptions) {
             auth: {
                 scope: "account",
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Get account",
+            notes: "Get the currently used account (self)",
+            tags: ["api", "accountScope"],
         },
         handler: async function(request, h) {
             const id = request.auth.credentials.roles.account._id;
@@ -376,6 +457,14 @@ const register = function(server, serverOptions) {
                     }).required(),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Change account's name",
+            notes: "Change the name of the currently used account (self)",
+            tags: ["api", "accountScope"],
         },
         handler: async function(request, h) {
             const id = request.auth.credentials.roles.account._id;

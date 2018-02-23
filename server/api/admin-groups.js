@@ -3,6 +3,8 @@ const Boom = require("boom");
 const Joi = require("joi");
 const Preware = require("../preware");
 
+const RESPONSES = require("../constants/Responses");
+
 const register = function(server, serverOptions) {
     server.route({
         method: "GET",
@@ -13,11 +15,25 @@ const register = function(server, serverOptions) {
             },
             validate: {
                 query: {
-                    sort: Joi.string().default("_id"),
-                    limit: Joi.number().default(20),
-                    page: Joi.number().default(1),
+                    sort: Joi.string()
+                        .default("_id")
+                        .description("which param to sort"),
+                    limit: Joi.number()
+                        .default(20)
+                        .description("maximum amount of groups returned"),
+                    page: Joi.number()
+                        .default(1)
+                        .description("current page"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Get Admin Groups",
+            notes: "Get all available admin groups",
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -41,9 +57,19 @@ const register = function(server, serverOptions) {
             },
             validate: {
                 payload: {
-                    name: Joi.string().required(),
+                    name: Joi.string()
+                        .required()
+                        .description("name of new group"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Create Admin Groups",
+            notes: "Create a new admin group",
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -58,6 +84,14 @@ const register = function(server, serverOptions) {
             auth: {
                 scope: "admin",
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Get an Admin Group",
+            notes: "Get an admin group based on admin group ID",
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -83,9 +117,19 @@ const register = function(server, serverOptions) {
                     id: Joi.string().invalid("root"),
                 },
                 payload: {
-                    name: Joi.string().required(),
+                    name: Joi.string()
+                        .required()
+                        .description("new name of group"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Change name",
+            notes: "Change name of an admin group (changing root is not allowed)",
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -117,6 +161,14 @@ const register = function(server, serverOptions) {
                     id: Joi.string().invalid("root"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Delete an admin group",
+            notes: "Delete an admin group based on ID",
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -142,9 +194,19 @@ const register = function(server, serverOptions) {
                     id: Joi.string().invalid("root"),
                 },
                 payload: {
-                    permissions: Joi.object().required(),
+                    permissions: Joi.object()
+                        .required()
+                        .description("new permission"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Update permission",
+            notes: "Update permission of a group. Any permission is required to have a permission boolean property",
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {

@@ -8,7 +8,8 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "nodemon -e js,md server.js",
+    "start": "NODE_ENV=production nodemon -e js,md server.js",
+    "start:dev": "NODE_ENV=development nodemon -e js,md server.js",
     "inspect": "nodemon --inspect -e js,md server.js",
     "first-time-setup": "node first-time-setup.js",
     "test": "lab -c -L"

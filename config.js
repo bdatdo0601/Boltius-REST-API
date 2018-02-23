@@ -9,7 +9,7 @@ const criteria = {
 
 const config = {
     $meta: "This file configures the plot device.",
-    projectName: "Frame",
+    projectName: "Wentworth Student Goverment Boltius Tool",
     port: {
         web: {
             $filter: "env",
@@ -33,7 +33,7 @@ const config = {
                 db: {
                     $filter: "env",
                     production: process.env.MONGODB_DB_NAME,
-                    test: "frame-test",
+                    test: "project-boltius-api-test",
                     $default: "project-boltius-api",
                 },
             },
@@ -41,22 +41,22 @@ const config = {
         autoIndex: true,
     },
     nodemailer: {
-        host: "smtp.gmail.com",
+        host: "outlook.office365.com",
         port: 465,
         secure: true,
         auth: {
-            user: "jedireza@gmail.com",
-            pass: process.env.SMTP_PASSWORD,
+            user: "wsg@wit.edu",
+            pass: process.env.EMAIL_PWD,
         },
     },
     system: {
         fromAddress: {
             name: "Frame",
-            address: "jedireza@gmail.com",
+            address: "wsg@wit.edu",
         },
         toAddress: {
             name: "Frame",
-            address: "jedireza@gmail.com",
+            address: "wsg@wit.edu",
         },
     },
 };

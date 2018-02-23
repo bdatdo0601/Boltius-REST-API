@@ -77,7 +77,7 @@ const register = (server, serverOptions) => {
             // Parse payload
             const payload = await parsePayload(request);
             // Can we show graphiQL?
-            const showGraphiQL = process.env.NODE_ENV === "development" && (await canDisplayGraphiQL(request, payload));
+            const showGraphiQL = process.env.NODE_ENV === "development" && canDisplayGraphiQL(request, payload);
             // Get GraphQL params from the request and POST body data.
             const { query, variables, operationName } = getGraphQLParams(request, false);
             const result = await GraphQLModule.getResult(operationName, query, true, showGraphiQL, variables, Schema);

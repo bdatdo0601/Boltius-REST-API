@@ -2,6 +2,8 @@ const Config = require("../../config");
 const Joi = require("joi");
 const Mailer = require("../mailer");
 
+const RESPONSES = require("../constants/Responses");
+
 const register = function(server, serverOptions) {
     server.route({
         method: "POST",
@@ -10,13 +12,26 @@ const register = function(server, serverOptions) {
             auth: false,
             validate: {
                 payload: {
-                    name: Joi.string().required(),
+                    name: Joi.string()
+                        .required()
+                        .description("Sender's name"),
                     email: Joi.string()
                         .email()
-                        .required(),
-                    message: Joi.string().required(),
+                        .required()
+                        .description("Sender's email"),
+                    message: Joi.string()
+                        .required()
+                        .description("Message"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Send email",
+            notes: "Sending an email to this system",
+            tags: ["api", "public"],
         },
         handler: async function(request, h) {
             const emailOptions = {
