@@ -1,6 +1,7 @@
 {
     "eslint.packageManager": "yarn",
     "cSpell.words": [
+        "admin",
         "arrowception",
         "boltius",
         "graphi",

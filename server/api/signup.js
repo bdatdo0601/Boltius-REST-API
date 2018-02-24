@@ -6,6 +6,8 @@ const Mailer = require("../mailer");
 const Session = require("../models/session");
 const User = require("../models/user");
 
+const RESPONSES = require("../constants/Responses");
+
 const register = function(server, serverOptions) {
     server.route({
         method: "POST",
@@ -26,6 +28,12 @@ const register = function(server, serverOptions) {
                     password: Joi.string().required(),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "public"],
             pre: [
                 {
                     assign: "usernameCheck",

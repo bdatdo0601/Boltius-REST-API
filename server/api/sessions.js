@@ -3,6 +3,8 @@ const Joi = require("joi");
 const Preware = require("../preware");
 const Session = require("../models/session");
 
+const RESPONSES = require("../constants/Responses");
+
 const register = function(server, serverOptions) {
     server.route({
         method: "GET",
@@ -18,6 +20,12 @@ const register = function(server, serverOptions) {
                     page: Joi.number().default(1),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -39,6 +47,12 @@ const register = function(server, serverOptions) {
             auth: {
                 scope: "admin",
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -59,6 +73,12 @@ const register = function(server, serverOptions) {
             auth: {
                 scope: "admin",
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -79,6 +99,12 @@ const register = function(server, serverOptions) {
             auth: {
                 scope: ["admin", "account"],
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "adminScope", "accountScope"],
         },
         handler: async function(request, h) {
             const query = {
@@ -92,6 +118,14 @@ const register = function(server, serverOptions) {
     server.route({
         method: "DELETE",
         path: "/api/sessions/my/{id}",
+        options: {
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "adminScope", "accountScope"],
+        },
         handler: async function(request, h) {
             const currentSession = `${request.auth.credentials.session._id}`;
 

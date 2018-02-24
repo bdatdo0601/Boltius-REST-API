@@ -3,6 +3,8 @@ const Joi = require("joi");
 const Preware = require("../preware");
 const Status = require("../models/status");
 
+const RESPONSES = require("../constants/Responses");
+
 const register = function(server, serverOptions) {
     server.route({
         method: "GET",
@@ -18,6 +20,12 @@ const register = function(server, serverOptions) {
                     page: Joi.number().default(1),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -45,6 +53,12 @@ const register = function(server, serverOptions) {
                     pivot: Joi.string().required(),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -59,6 +73,12 @@ const register = function(server, serverOptions) {
             auth: {
                 scope: "admin",
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -84,6 +104,12 @@ const register = function(server, serverOptions) {
                     name: Joi.string().required(),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -110,6 +136,12 @@ const register = function(server, serverOptions) {
             auth: {
                 scope: "admin",
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {

@@ -5,6 +5,8 @@ const Joi = require("joi");
 const Preware = require("../preware");
 const User = require("../models/user");
 
+const RESPONSES = require("../constants/Responses");
+
 const register = function(server, serverOptions) {
     server.route({
         method: "GET",
@@ -20,6 +22,12 @@ const register = function(server, serverOptions) {
                     page: Joi.number().default(1),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -54,6 +62,12 @@ const register = function(server, serverOptions) {
                         .required(),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "rootScope"],
             pre: [
                 Preware.requireAdminGroup("root"),
                 {
@@ -98,6 +112,12 @@ const register = function(server, serverOptions) {
             auth: {
                 scope: "admin",
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -134,6 +154,12 @@ const register = function(server, serverOptions) {
                         .required(),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "rootScope"],
             pre: [
                 Preware.requireAdminGroup("root"),
                 {
@@ -213,6 +239,12 @@ const register = function(server, serverOptions) {
                     id: Joi.string().invalid("000000000000000000000000"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -241,6 +273,12 @@ const register = function(server, serverOptions) {
                     password: Joi.string().required(),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -267,6 +305,12 @@ const register = function(server, serverOptions) {
             auth: {
                 scope: ["admin", "account"],
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "adminScope", "accountScope"],
         },
         handler: async function(request, h) {
             const id = request.auth.credentials.user._id;
@@ -295,6 +339,12 @@ const register = function(server, serverOptions) {
                         .required(),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "adminScope", "accountScope"],
             pre: [
                 Preware.requireNotRootUser,
                 {
@@ -372,6 +422,12 @@ const register = function(server, serverOptions) {
                     password: Joi.string().required(),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            tags: ["api", "adminScope", "accountScope"],
             pre: [Preware.requireNotRootUser],
         },
         handler: async function(request, h) {

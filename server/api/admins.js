@@ -4,6 +4,8 @@ const Joi = require("joi");
 const Preware = require("../preware");
 const User = require("../models/user");
 
+const RESPONSES = require("../constants/Responses");
+
 const register = function(server, serverOptions) {
     server.route({
         method: "GET",
@@ -14,11 +16,25 @@ const register = function(server, serverOptions) {
             },
             validate: {
                 query: {
-                    sort: Joi.string().default("_id"),
-                    limit: Joi.number().default(20),
-                    page: Joi.number().default(1),
+                    sort: Joi.string()
+                        .default("_id")
+                        .description("param to sort list"),
+                    limit: Joi.number()
+                        .default(20)
+                        .description("amount of admin per page"),
+                    page: Joi.number()
+                        .default(1)
+                        .description("current page to show"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Get Admin Groups",
+            notes: "Get all available admin groups",
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -42,9 +58,19 @@ const register = function(server, serverOptions) {
             },
             validate: {
                 payload: {
-                    name: Joi.string().required(),
+                    name: Joi.string()
+                        .required()
+                        .description("new admin name"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Create new admin",
+            notes: "Create a new admin",
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -59,6 +85,14 @@ const register = function(server, serverOptions) {
             auth: {
                 scope: "admin",
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Get Admin",
+            notes: "Get info about an admin",
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -91,6 +125,14 @@ const register = function(server, serverOptions) {
                     }).required(),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Update admin name",
+            notes: "Update admin name",
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -117,6 +159,14 @@ const register = function(server, serverOptions) {
             auth: {
                 scope: "admin",
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Delete an admin",
+            notes: "Delete current admin",
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -142,9 +192,19 @@ const register = function(server, serverOptions) {
                     id: Joi.string().invalid("111111111111111111111111"),
                 },
                 payload: {
-                    groups: Joi.object().required(),
+                    groups: Joi.object()
+                        .required()
+                        .description("each key is groupId and value is group name"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Link admin to groups",
+            notes: "Link an admin to one to many groups (including admin groups)",
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -176,9 +236,18 @@ const register = function(server, serverOptions) {
                     id: Joi.string().invalid("111111111111111111111111"),
                 },
                 payload: {
-                    permissions: Joi.object().required(),
+                    permissions: Joi.object()
+                        .required()
+                        .description("each key is variable with a boolean value"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Give permission to an admin",
+            tags: ["api", "rootScope"],
             pre: [Preware.requireAdminGroup("root")],
         },
         handler: async function(request, h) {
@@ -212,9 +281,18 @@ const register = function(server, serverOptions) {
                 payload: {
                     username: Joi.string()
                         .lowercase()
-                        .required(),
+                        .required()
+                        .description("user's username"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Set an user as Admin",
+            notes: "Only one admin record to one user",
+            tags: ["api", "rootScope"],
             pre: [
                 Preware.requireAdminGroup("root"),
                 {
@@ -276,6 +354,13 @@ const register = function(server, serverOptions) {
                     id: Joi.string().invalid("111111111111111111111111"),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Unlink an admin record from an user",
+            tags: ["api", "rootScope"],
             pre: [
                 Preware.requireAdminGroup("root"),
                 {

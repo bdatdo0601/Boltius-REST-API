@@ -7,6 +7,8 @@ const Mailer = require("../mailer");
 const Session = require("../models/session");
 const User = require("../models/user");
 
+const RESPONSES = require("../constants/Responses");
+
 const register = function(server, serverOptions) {
     server.route({
         method: "POST",
@@ -21,6 +23,14 @@ const register = function(server, serverOptions) {
                     password: Joi.string().required(),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Login",
+            notes: "username can be either email or username",
+            tags: ["api", "public"],
             pre: [
                 {
                     assign: "abuseDetected",
@@ -96,6 +106,13 @@ const register = function(server, serverOptions) {
                         .required(),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Request account reset",
+            tags: ["api", "public"],
             pre: [
                 {
                     assign: "user",
@@ -160,6 +177,14 @@ const register = function(server, serverOptions) {
                     password: Joi.string().required(),
                 },
             },
+            plugins: {
+                "hapi-swagger": {
+                    responses: RESPONSES,
+                },
+            },
+            description: "Reset password of an user",
+            notes: "Need key to reset",
+            tags: ["api", "rootScope"],
             pre: [
                 {
                     assign: "user",
