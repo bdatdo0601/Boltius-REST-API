@@ -3,7 +3,7 @@ const Accepts = require("accepts");
 const Boom = require("boom");
 const { Stream } = require("stream");
 const GraphQLModule = require("../graphql");
-const Schema = require("../graphql/schema/schema");
+const Schema = require("../graphql/schema");
 
 /**
  * Define helper: parse payload

@@ -9,7 +9,7 @@ const criteria = {
 
 const config = {
     $meta: "This file configures the plot device.",
-    projectName: "Wentworth Student Goverment Boltius Tool",
+    projectName: "Wentworth Student Government Boltius Tool",
     port: {
         web: {
             $filter: "env",
@@ -51,7 +51,7 @@ const config = {
     },
     system: {
         fromAddress: {
-            name: "Frame",
+            name: "Wentworth Student Government",
             address: "wsg@wit.edu",
         },
         toAddress: {
